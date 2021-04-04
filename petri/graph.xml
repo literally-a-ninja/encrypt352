@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><pnml>
     <net id="Net-One" type="P/T net">
         <token id="Default" enabled="true" red="0" green="0" blue="0"/>
-        <place id="Cond: Done consuming">
+        <place id="Cond: Cipher reclaimable">
             <graphics>
-                <position x="435.0" y="150.0"/>
+                <position x="451.66666666666663" y="175.0"/>
             </graphics>
             <name>
-                <value>Cond: Done consuming</value>
+                <value>Cond: Cipher reclaimable</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -21,9 +21,89 @@
                 <value>0</value>
             </capacity>
         </place>
+        <place id="Cond: Count  (read) reclaimable">
+            <graphics>
+                <position x="406.66666666666663" y="201.66666666666666"/>
+            </graphics>
+            <name>
+                <value>Cond: Count  (read) reclaimable</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Cond: Count (write) Reclaimable">
+            <graphics>
+                <position x="511.66666666666663" y="35.0"/>
+            </graphics>
+            <name>
+                <value>Cond: Count (write) Reclaimable</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,0</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Cond: Input buffer availability">
+            <graphics>
+                <position x="211.66666666666669" y="230.00000000000003"/>
+            </graphics>
+            <name>
+                <value>Cond: Input buffer availability</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,2</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
+        <place id="Cond: Output buffer avilability">
+            <graphics>
+                <position x="346.6666666666667" y="90.0"/>
+            </graphics>
+            <name>
+                <value>Cond: Output buffer avilability</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </name>
+            <initialMarking>
+                <value>Default,3</value>
+                <graphics>
+                    <offset x="0.0" y="0.0"/>
+                </graphics>
+            </initialMarking>
+            <capacity>
+                <value>0</value>
+            </capacity>
+        </place>
         <place id="Cond: Reading text">
             <graphics>
-                <position x="165.0" y="75.0"/>
+                <position x="218.33333333333331" y="115.0"/>
             </graphics>
             <name>
                 <value>Cond: Reading text</value>
@@ -41,12 +121,12 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="Cond: Request in progress">
+        <place id="Cond: Ready to cipher">
             <graphics>
-                <position x="345.0" y="150.0"/>
+                <position x="290.0" y="148.33333333333334"/>
             </graphics>
             <name>
-                <value>Cond: Request in progress</value>
+                <value>Cond: Ready to cipher</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -61,12 +141,12 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="Cond: Unciphered plain text">
+        <place id="Cond: Ready to count (read)">
             <graphics>
-                <position x="340.0" y="75.0"/>
+                <position x="286.6666666666667" y="195.0"/>
             </graphics>
             <name>
-                <value>Cond: Unciphered plain text</value>
+                <value>Cond: Ready to count (read)</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -81,12 +161,12 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="Cond: Uncounted read text">
+        <place id="Cond: Ready to count (write)">
             <graphics>
-                <position x="230.0" y="15.0"/>
+                <position x="433.3333333333333" y="135.0"/>
             </graphics>
             <name>
-                <value>Cond: Uncounted read text</value>
+                <value>Cond: Ready to count (write)</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -101,12 +181,12 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="Cond: Uncounted written text">
+        <place id="Cond: Ready to write">
             <graphics>
-                <position x="525.0" y="140.0"/>
+                <position x="390.0" y="106.66666666666666"/>
             </graphics>
             <name>
-                <value>Cond: Uncounted written text</value>
+                <value>Cond: Ready to write</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -121,12 +201,12 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="Cond: Unwritten ciphered text">
+        <place id="Cond: Written text (reclaimable)">
             <graphics>
-                <position x="435.0" y="71.33333333333333"/>
+                <position x="486.66666666666663" y="73.33333333333333"/>
             </graphics>
             <name>
-                <value>Cond: Unwritten ciphered text</value>
+                <value>Cond: Written text (reclaimable)</value>
                 <graphics>
                     <offset x="0.0" y="0.0"/>
                 </graphics>
@@ -141,52 +221,38 @@
                 <value>0</value>
             </capacity>
         </place>
-        <place id="Cond: Written ciphered text">
+        <transition id="Event: Cipher character">
             <graphics>
-                <position x="620.0" y="65.0"/>
+                <position x="343.3333333333333" y="148.33333333333334"/>
             </graphics>
             <name>
-                <value>Cond: Written ciphered text</value>
+                <value>Event: Cipher character</value>
                 <graphics>
-                    <offset x="0.0" y="0.0"/>
+                    <offset x="-6.666666666666666" y="40.55555555555556"/>
                 </graphics>
             </name>
-            <initialMarking>
-                <value>Default,0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <place id="P0">
+            <orientation>
+                <value>270</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Event: Count character">
             <graphics>
-                <position x="225.0" y="150.0"/>
+                <position x="340.0" y="190.00000000000003"/>
             </graphics>
             <name>
-                <value>P0</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </name>
-            <initialMarking>
-                <value>Default,1</value>
-                <graphics>
-                    <offset x="0.0" y="0.0"/>
-                </graphics>
-            </initialMarking>
-            <capacity>
-                <value>0</value>
-            </capacity>
-        </place>
-        <transition id="Event: Cipher text">
-            <graphics>
-                <position x="385.0" y="25.0"/>
-            </graphics>
-            <name>
-                <value>Event: Cipher text</value>
+                <value>Event: Count character</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -207,142 +273,12 @@
                 <value>1</value>
             </priority>
         </transition>
-        <transition id="Event: Count read text">
+        <transition id="Event: Count text (write)">
             <graphics>
-                <position x="285.0" y="10.0"/>
+                <position x="523.3333333333334" y="130.0"/>
             </graphics>
             <name>
-                <value>Event: Count read text</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="Event: Count written text">
-            <graphics>
-                <position x="620.0" y="135.0"/>
-            </graphics>
-            <name>
-                <value>Event: Count written text</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="Event: Read text">
-            <graphics>
-                <position x="225.0" y="75.0"/>
-            </graphics>
-            <name>
-                <value>Event: Read text</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>180</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="Event: Reset requested">
-            <graphics>
-                <position x="280.0" y="150.0"/>
-            </graphics>
-            <name>
-                <value>Event: Reset requested</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="Event: Write text">
-            <graphics>
-                <position x="515.0" y="75.0"/>
-            </graphics>
-            <name>
-                <value>Event: Write text</value>
-                <graphics>
-                    <offset x="-5.0" y="35.0"/>
-                </graphics>
-            </name>
-            <orientation>
-                <value>0</value>
-            </orientation>
-            <rate>
-                <value>1.0</value>
-            </rate>
-            <timed>
-                <value>false</value>
-            </timed>
-            <infiniteServer>
-                <value>false</value>
-            </infiniteServer>
-            <priority>
-                <value>1</value>
-            </priority>
-        </transition>
-        <transition id="T6">
-            <graphics>
-                <position x="340.0" y="220.0"/>
-            </graphics>
-            <name>
-                <value>T6</value>
+                <value>Event: Count text (write)</value>
                 <graphics>
                     <offset x="-5.0" y="35.0"/>
                 </graphics>
@@ -363,7 +299,111 @@
                 <value>1</value>
             </priority>
         </transition>
-        <arc id="Cond: Done consuming to T6" source="Cond: Done consuming" target="T6">
+        <transition id="Event: Read text">
+            <graphics>
+                <position x="205.0" y="173.33333333333334"/>
+            </graphics>
+            <name>
+                <value>Event: Read text</value>
+                <graphics>
+                    <offset x="-13.888888888888888" y="108.88888888888889"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>270</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Event: Reclaim slot (read)">
+            <graphics>
+                <position x="503.3333333333333" y="230.0"/>
+            </graphics>
+            <name>
+                <value>Event: Reclaim slot (read)</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>45</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Event: Reclaim slot (write)">
+            <graphics>
+                <position x="390.0" y="56.666666666666664"/>
+            </graphics>
+            <name>
+                <value>Event: Reclaim slot (write)</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>180</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <transition id="Event: Write text">
+            <graphics>
+                <position x="441.66666666666663" y="95.0"/>
+            </graphics>
+            <name>
+                <value>Event: Write text</value>
+                <graphics>
+                    <offset x="-5.0" y="35.0"/>
+                </graphics>
+            </name>
+            <orientation>
+                <value>180</value>
+            </orientation>
+            <rate>
+                <value>1.0</value>
+            </rate>
+            <timed>
+                <value>false</value>
+            </timed>
+            <infiniteServer>
+                <value>false</value>
+            </infiniteServer>
+            <priority>
+                <value>1</value>
+            </priority>
+        </transition>
+        <arc id="Cond: Cipher reclaimable to Event: Reclaim slot (read)" source="Cond: Cipher reclaimable" target="Event: Reclaim slot (read)">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -372,9 +412,60 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="446" y="176" curvePoint="false"/>
-            <arcpath id="001" x="447" y="237" curvePoint="false"/>
-            <arcpath id="002" x="366" y="231" curvePoint="false"/>
+            <arcpath id="000" x="475" y="197" curvePoint="false"/>
+            <arcpath id="001" x="516" y="235" curvePoint="false"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Cond: Count  (read) reclaimable to Event: Reclaim slot (read)" source="Cond: Count  (read) reclaimable" target="Event: Reclaim slot (read)">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="433" y="215" curvePoint="false"/>
+            <arcpath id="001" x="511" y="240" curvePoint="true"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Cond: Count (write) Reclaimable to Event: Reclaim slot (write)" source="Cond: Count (write) Reclaimable" target="Event: Reclaim slot (write)">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="509" y="50" curvePoint="false"/>
+            <arcpath id="001" x="407" y="63" curvePoint="true"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Cond: Input buffer availability to Event: Read text" source="Cond: Input buffer availability" target="Event: Read text">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="221" y="227" curvePoint="false"/>
+            <arcpath id="001" x="218" y="191" curvePoint="true"/>
+            <type value="normal"/>
+        </arc>
+        <arc id="Cond: Output buffer avilability to Event: Cipher character" source="Cond: Output buffer avilability" target="Event: Cipher character">
+            <graphics/>
+            <inscription>
+                <value>Default,1</value>
+                <graphics/>
+            </inscription>
+            <tagged>
+                <value>false</value>
+            </tagged>
+            <arcpath id="000" x="356" y="117" curvePoint="false"/>
+            <arcpath id="001" x="351" y="155" curvePoint="false"/>
             <type value="normal"/>
         </arc>
         <arc id="Cond: Reading text to Event: Read text" source="Cond: Reading text" target="Event: Read text">
@@ -386,11 +477,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="191" y="86" curvePoint="false"/>
-            <arcpath id="001" x="232" y="86" curvePoint="false"/>
+            <arcpath id="000" x="227" y="142" curvePoint="false"/>
+            <arcpath id="001" x="217" y="181" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Cond: Request in progress to T6" source="Cond: Request in progress" target="T6">
+        <arc id="Cond: Ready to cipher to Event: Cipher character" source="Cond: Ready to cipher" target="Event: Cipher character">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -399,11 +490,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="355" y="176" curvePoint="false"/>
-            <arcpath id="001" x="352" y="226" curvePoint="false"/>
+            <arcpath id="000" x="317" y="160" curvePoint="false"/>
+            <arcpath id="001" x="341" y="160" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Cond: Unciphered plain text to Event: Cipher text" source="Cond: Unciphered plain text" target="Event: Cipher text">
+        <arc id="Cond: Ready to count (read) to Event: Count character" source="Cond: Ready to count (read)" target="Event: Count character">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -412,11 +503,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="361" y="75" curvePoint="false"/>
-            <arcpath id="001" x="390" y="41" curvePoint="false"/>
+            <arcpath id="000" x="313" y="204" curvePoint="false"/>
+            <arcpath id="001" x="337" y="202" curvePoint="true"/>
             <type value="normal"/>
         </arc>
-        <arc id="Cond: Uncounted read text to Event: Count read text" source="Cond: Uncounted read text" target="Event: Count read text">
+        <arc id="Cond: Ready to count (write) to Event: Count text (write)" source="Cond: Ready to count (write)" target="Event: Count text (write)">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -425,11 +516,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="256" y="25" curvePoint="false"/>
-            <arcpath id="001" x="291" y="22" curvePoint="false"/>
+            <arcpath id="000" x="460" y="146" curvePoint="false"/>
+            <arcpath id="001" x="521" y="141" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Cond: Uncounted written text to Event: Count written text" source="Cond: Uncounted written text" target="Event: Count written text">
+        <arc id="Cond: Ready to write to Event: Write text" source="Cond: Ready to write" target="Event: Write text">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -438,11 +529,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="551" y="150" curvePoint="false"/>
-            <arcpath id="001" x="626" y="147" curvePoint="false"/>
+            <arcpath id="000" x="417" y="115" curvePoint="false"/>
+            <arcpath id="001" x="449" y="107" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Cond: Unwritten ciphered text to Event: Write text" source="Cond: Unwritten ciphered text" target="Event: Write text">
+        <arc id="Cond: Written text (reclaimable) to Event: Reclaim slot (write)" source="Cond: Written text (reclaimable)" target="Event: Reclaim slot (write)">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -451,11 +542,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="461" y="84" curvePoint="false"/>
-            <arcpath id="001" x="521" y="87" curvePoint="false"/>
+            <arcpath id="000" x="484" y="82" curvePoint="false"/>
+            <arcpath id="001" x="407" y="73" curvePoint="true"/>
             <type value="normal"/>
         </arc>
-        <arc id="Event: Cipher text to Cond: Unwritten ciphered text" source="Event: Cipher text" target="Cond: Unwritten ciphered text">
+        <arc id="Event: Cipher character to Cond: Cipher reclaimable" source="Event: Cipher character" target="Cond: Cipher reclaimable">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -464,11 +555,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="404" y="42" curvePoint="false"/>
-            <arcpath id="001" x="436" y="72" curvePoint="false"/>
+            <arcpath id="000" x="371" y="160" curvePoint="false"/>
+            <arcpath id="001" x="450" y="183" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Event: Read text to Cond: Unciphered plain text" source="Event: Read text" target="Cond: Unciphered plain text">
+        <arc id="Event: Cipher character to Cond: Ready to count (write)" source="Event: Cipher character" target="Cond: Ready to count (write)">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -477,11 +568,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="241" y="90" curvePoint="false"/>
-            <arcpath id="001" x="336" y="87" curvePoint="false"/>
+            <arcpath id="000" x="371" y="160" curvePoint="false"/>
+            <arcpath id="001" x="431" y="150" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Event: Read text to Cond: Uncounted read text" source="Event: Read text" target="Cond: Uncounted read text">
+        <arc id="Event: Cipher character to Cond: Ready to write" source="Event: Cipher character" target="Cond: Ready to write">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -490,11 +581,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="236" y="71" curvePoint="false"/>
-            <arcpath id="001" x="240" y="41" curvePoint="false"/>
+            <arcpath id="000" x="361" y="156" curvePoint="false"/>
+            <arcpath id="001" x="388" y="125" curvePoint="true"/>
             <type value="normal"/>
         </arc>
-        <arc id="Event: Read text to P0" source="Event: Read text" target="P0">
+        <arc id="Event: Count character to Cond: Count  (read) reclaimable" source="Event: Count character" target="Cond: Count  (read) reclaimable">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -503,11 +594,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="236" y="101" curvePoint="false"/>
-            <arcpath id="001" x="236" y="146" curvePoint="false"/>
+            <arcpath id="000" x="367" y="203" curvePoint="false"/>
+            <arcpath id="001" x="404" y="211" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="Event: Reset requested to Cond: Request in progress" source="Event: Reset requested" target="Cond: Request in progress">
+        <arc id="Event: Count text (write) to Cond: Count (write) Reclaimable" source="Event: Count text (write)" target="Cond: Count (write) Reclaimable">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -516,11 +607,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="296" y="162" curvePoint="false"/>
-            <arcpath id="001" x="342" y="161" curvePoint="false"/>
+            <arcpath id="000" x="536" y="137" curvePoint="false"/>
+            <arcpath id="001" x="527" y="62" curvePoint="true"/>
             <type value="normal"/>
         </arc>
-        <arc id="Event: Write text to Cond: Uncounted written text" source="Event: Write text" target="Cond: Uncounted written text">
+        <arc id="Event: Read text to Cond: Ready to count (read)" source="Event: Read text" target="Cond: Ready to count (read)">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -529,11 +620,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="526" y="102" curvePoint="false"/>
-            <arcpath id="001" x="534" y="136" curvePoint="false"/>
+            <arcpath id="000" x="232" y="185" curvePoint="false"/>
+            <arcpath id="001" x="285" y="200" curvePoint="true"/>
             <type value="normal"/>
         </arc>
-        <arc id="Event: Write text to Cond: Written ciphered text" source="Event: Write text" target="Cond: Written ciphered text">
+        <arc id="Event: Read text to Cond: Unciphered plain text" source="Event: Read text" target="Cond: Ready to cipher">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -542,11 +633,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="531" y="86" curvePoint="false"/>
-            <arcpath id="001" x="616" y="78" curvePoint="false"/>
+            <arcpath id="000" x="232" y="185" curvePoint="false"/>
+            <arcpath id="001" x="288" y="166" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="P0 to Event: Read text" source="P0" target="Event: Read text">
+        <arc id="Event: Reclaim slot (read) to Cond: Input buffer availability" source="Event: Reclaim slot (read)" target="Cond: Input buffer availability">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -555,11 +646,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="236" y="146" curvePoint="false"/>
-            <arcpath id="001" x="236" y="101" curvePoint="false"/>
+            <arcpath id="000" x="505" y="245" curvePoint="false"/>
+            <arcpath id="001" x="238" y="242" curvePoint="false"/>
             <type value="normal"/>
         </arc>
-        <arc id="P0 to Event: Reset requested" source="P0" target="Event: Reset requested">
+        <arc id="Event: Reclaim slot (write) to Cond: Output buffer avilability" source="Event: Reclaim slot (write)" target="Cond: Output buffer avilability">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -568,11 +659,11 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="251" y="162" curvePoint="false"/>
-            <arcpath id="001" x="286" y="162" curvePoint="false"/>
+            <arcpath id="000" x="397" y="68" curvePoint="false"/>
+            <arcpath id="001" x="367" y="90" curvePoint="true"/>
             <type value="normal"/>
         </arc>
-        <arc id="T6 to P0" source="T6" target="P0">
+        <arc id="Event: Write text to Cond: Written text (reclaimable)" source="Event: Write text" target="Cond: Written text (reclaimable)">
             <graphics/>
             <inscription>
                 <value>Default,1</value>
@@ -581,10 +672,8 @@
             <tagged>
                 <value>false</value>
             </tagged>
-            <arcpath id="000" x="352" y="236" curvePoint="false"/>
-            <arcpath id="001" x="357" y="287" curvePoint="false"/>
-            <arcpath id="002" x="237" y="287" curvePoint="false"/>
-            <arcpath id="003" x="236" y="176" curvePoint="false"/>
+            <arcpath id="000" x="459" y="106" curvePoint="false"/>
+            <arcpath id="001" x="487" y="95" curvePoint="true"/>
             <type value="normal"/>
         </arc>
     </net>
