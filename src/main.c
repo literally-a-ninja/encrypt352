@@ -1,5 +1,7 @@
-#include "vendor/encrypt-module.c"
+#include "common.h"
+#include "coroutines.h"
 
+#include <pthread.h>
 #include <stdbool.h> // bool type
 #include <stdio.h>
 #include <sys/stat.h> // stat
@@ -10,6 +12,25 @@ void reset_finished ()
 
 void reset_requested ()
 {
+}
+
+globals *ctor_globals (unsigned r, unsigned w)
+{
+    globals *g = malloc (sizeof (globals));
+
+    g->rBuf = malloc (sizeof (char) * r);
+    g->wBuf = malloc (sizeof (char) * w);
+    g->r    = g->rBuf;
+    g->w    = g->wBuf;
+
+    return g;
+}
+
+void dtor_globals (globals *g)
+{
+    free (g->rBuf);
+    free (g->wBuf);
+    free (g);
 }
 
 int file_exists (char *filename)
@@ -56,10 +77,10 @@ int pre_malformed_input (int argc, char *argv [])
     {
         // clang-format off
         fprintf (stderr, 
-            "Usage: %s [OPTIONS]... READ_FROM WRITE_TO"    "\n\n"
-            "None of these options are manditory by default."
-            "  -f"        "\tEnables overwriting of WRITE_TO."
-        "\n",*argv);
+            "Usage: %s [OPTIONS]... READ_FROM WRITE_TO"                     "\n\n"
+            "Options"                                                       "\n"
+            "  -f\t"    "Auto-acknowledge overwriting of WRITE_TO file."
+        "\n\n",*argv);
         // clang-format on
         return 1;
     }
@@ -120,16 +141,12 @@ int main (int argc, char *argv [])
     char *readFile  = find_argument (1, argc, argv);
     char *writeFile = find_argument (2, argc, argv);
 
+    globals *g = ctor_globals (readBufLen, writeBufLen);
     init (readFile, writeFile);
-    char c;
 
-    while ((c = read_input ()) != EOF)
-    {
-        count_input (c);
-        c = caesar_encrypt (c);
-        count_output (c);
-        write_output (c);
-    }
+    pthread_t pid;
+    pthread_create (&pid, NULL, &co_coordinator, (void *)g);
+    pthread_join (pid, NULL);
 
     printf ("End of file reached.\n");
     return 0;
