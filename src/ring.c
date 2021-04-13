@@ -1,5 +1,5 @@
 #include "ring.h"
-#include <semaphore.h>
+#include "common.h"
 #include <stdlib.h>
 
 char ring_pop (ring *r)
@@ -10,7 +10,7 @@ char ring_pop (ring *r)
 
     char c;
     c       = r->buf [r->tail];
-    r->tail = r->tail - 1 < 0 ? r->capacity - 1 : r->tail - 1;
+    r->tail = r->tail + 1 >= r->capacity ? 0 : r->tail + 1;
 
     return c;
 }
@@ -23,6 +23,14 @@ void ring_push (char c, ring *r)
 
     r->buf [r->head] = c;
     r->head          = r->head + 1 >= r->capacity ? 0 : r->head + 1;
+}
+
+void dtor_ring (ring *r)
+{
+    free (r->buf);
+    free (r->pushSem);
+    free (r->popSem);
+    free (r);
 }
 
 ring *ctor_ring (unsigned length)

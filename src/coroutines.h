@@ -1,6 +1,4 @@
 #ifndef H_COROUTINES
-#include <semaphore.h>
-#include <stdio.h>
 
 /**
  * Coordinator thread, responsible for managing lifecycle of all worker threads.
@@ -39,4 +37,20 @@ void *co_rcount (void *a);
  **/
 void *co_rcipher (void *a);
 
+/**
+ * The writer thread is responsible for writing the encrypted characters in the
+ * output buffer to the output file. It must do so by calling the provided
+ * function write_output(). Note that the writer may need to block until an
+ * encrypted character is available in the buffer. The writer continues until it
+ * has written the last encrypted character.
+ **/
+void *co_writer (void *a);
+
+/**
+ * The output counter thread simply counts occurrences of each letter in the
+ * output file by looking at each character in the output buffer. It must call
+ * the provided function count_output(). Of course, the output counter thread
+ * will need to block if no characters are available in the output buffer.
+ **/
+void *co_wcount (void *a);
 #endif

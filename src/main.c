@@ -2,9 +2,15 @@
 #include "coroutines.h"
 
 #include <pthread.h>
+#include <semaphore.h>
 #include <stdbool.h> // bool type
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/stat.h> // stat
+
+#define DEV_MODE
+
+globals *g;
 
 void reset_finished ()
 {
@@ -12,25 +18,6 @@ void reset_finished ()
 
 void reset_requested ()
 {
-}
-
-globals *ctor_globals (unsigned r, unsigned w)
-{
-    globals *g = malloc (sizeof (globals));
-
-    g->rBuf = malloc (sizeof (char) * r);
-    g->wBuf = malloc (sizeof (char) * w);
-    g->r    = g->rBuf;
-    g->w    = g->wBuf;
-
-    return g;
-}
-
-void dtor_globals (globals *g)
-{
-    free (g->rBuf);
-    free (g->wBuf);
-    free (g);
 }
 
 int file_exists (char *filename)
@@ -110,6 +97,10 @@ int pre_buffers (unsigned *in, unsigned *out)
     scanf ("%u", in);
     if (*in < 2)
     {
+#ifdef DEV_MODE
+        if (!*in)
+            *in = 4;
+#endif
         fprintf (stderr, "E: Bounded amount; capacity must be "
                          "greater than one.\n\n");
         return 1;
@@ -119,6 +110,11 @@ int pre_buffers (unsigned *in, unsigned *out)
     scanf ("%u", out);
     if (*out < 2)
     {
+#ifdef DEV_MODE
+        if (!*out)
+            *out = 4;
+#endif
+
         fprintf (stderr, "E: Bounded amount; Capacity must be "
                          "greater than one.\n\n");
         return 1;
@@ -129,19 +125,17 @@ int pre_buffers (unsigned *in, unsigned *out)
 
 int main (int argc, char *argv [])
 {
-
-    unsigned readBufLen = 0, writeBufLen = 0;
+    g = malloc (sizeof (globals));
 
     if (pre_malformed_input (argc, argv))
         return 0;
 
-    if (pre_buffers (&readBufLen, &writeBufLen))
+    if (pre_buffers (&g->in, &g->out))
         return 0;
 
     char *readFile  = find_argument (1, argc, argv);
     char *writeFile = find_argument (2, argc, argv);
 
-    globals *g = ctor_globals (readBufLen, writeBufLen);
     init (readFile, writeFile);
 
     pthread_t pid;

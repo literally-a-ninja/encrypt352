@@ -2,21 +2,17 @@
 #define H_DS_RING
 
 #include <semaphore.h>
-#include <stdlib.h>
-
 typedef struct
 {
     char *buf;
-    unsigned char head;
-    unsigned char tail;
-    unsigned char capacity;
-    sem_t *pushSem;
-    sem_t *popSem;
-
+    unsigned capacity;
+    unsigned head, tail;
+    sem_t *pushSem, *popSem;
 } ring;
 
 void ring_push (char c, ring *r);
 char ring_pop (ring *r);
+void dtor_ring (ring *r);
 ring *ctor_ring (unsigned length);
 
 #endif
