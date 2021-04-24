@@ -1,14 +1,17 @@
 #include "encrypt-module.h"
+#include "coroutines.h"
+
 #include <ctype.h>
 #include <fcntl.h>
 #include <pthread.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
+
+// #define RESETS
 
 FILE *input_file;
 FILE *output_file;
@@ -26,25 +29,14 @@ void clear_counts ()
     output_total_count = 0;
 }
 
-void *random_reset ()
-{
-    while (1)
-    {
-        sleep (rand () % 11 + 5);
-        reset_requested ();
-        key = rand () % 26;
-        clear_counts ();
-        reset_finished ();
-    }
-}
-
 void init (char *inputFileName, char *outputFileName)
 {
-#ifdef C_RESETS
+#ifdef RESETS
     pthread_t pid;
     srand (time (0));
     pthread_create (&pid, NULL, &random_reset, NULL);
 #endif
+
     input_file  = fopen (inputFileName, "r");
     output_file = fopen (outputFileName, "w");
 }

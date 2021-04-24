@@ -1,6 +1,3 @@
-#include "common.h"
-#include "coroutines.h"
-
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdbool.h> // bool type
@@ -8,17 +5,10 @@
 #include <stdlib.h>
 #include <sys/stat.h> // stat
 
-#define DEV_MODE
+#include "fkworks0/debug.h"
+#include "vendor/commmon.h"
 
 globals *g;
-
-void reset_finished ()
-{
-}
-
-void reset_requested ()
-{
-}
 
 int file_exists (char *filename)
 {
@@ -97,10 +87,6 @@ int pre_buffers (unsigned *in, unsigned *out)
     scanf ("%u", in);
     if (*in < 2)
     {
-#ifdef DEV_MODE
-        if (!*in)
-            *in = 4;
-#endif
         fprintf (stderr, "E: Bounded amount; capacity must be "
                          "greater than one.\n\n");
         return 1;
@@ -110,14 +96,8 @@ int pre_buffers (unsigned *in, unsigned *out)
     scanf ("%u", out);
     if (*out < 2)
     {
-#ifdef DEV_MODE
-        if (!*out)
-            *out = 4;
-#endif
-
         fprintf (stderr, "E: Bounded amount; Capacity must be "
                          "greater than one.\n\n");
-        return 1;
     }
 
     return 0;
@@ -125,6 +105,9 @@ int pre_buffers (unsigned *in, unsigned *out)
 
 int main (int argc, char *argv [])
 {
+#ifdef DEBUG_COROUTINES
+    debug ("main :: Invoked");
+#endif
     g = malloc (sizeof (globals));
 
     if (pre_malformed_input (argc, argv))
@@ -133,15 +116,15 @@ int main (int argc, char *argv [])
     if (pre_buffers (&g->in, &g->out))
         return 0;
 
-    char *readFile  = find_argument (1, argc, argv);
-    char *writeFile = find_argument (2, argc, argv);
+    g->readFrom = find_argument (1, argc, argv);
+    g->writeTo  = find_argument (2, argc, argv);
 
-    init (readFile, writeFile);
+    coordinator = ctor_coordinator (g);
+    pthread_join (*coordinator, NULL);
 
-    pthread_t pid;
-    pthread_create (&pid, NULL, &co_coordinator, (void *)g);
-    pthread_join (pid, NULL);
+#ifdef DEBUG_COROUTINES
+    debug ("main :: End-of-thread");
+#endif
 
-    printf ("End of file reached.\n");
     return 0;
 }

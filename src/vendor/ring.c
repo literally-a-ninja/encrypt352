@@ -1,5 +1,5 @@
 #include "ring.h"
-#include "common.h"
+#include <semaphore.h>
 #include <stdlib.h>
 
 char ring_pop (ring *r)
@@ -13,6 +13,17 @@ char ring_pop (ring *r)
     r->tail = r->tail + 1 >= r->capacity ? 0 : r->tail + 1;
 
     return c;
+}
+
+void ring_reset (ring *r)
+{
+    r->head = 0;
+    r->tail = 0;
+
+    sem_close (r->popSem);
+    sem_close (r->pushSem);
+    sem_init (r->popSem, 1, 0);
+    sem_init (r->pushSem, 1, r->capacity);
 }
 
 void ring_push (char c, ring *r)
@@ -41,12 +52,8 @@ ring *ctor_ring (unsigned length)
     r->pushSem = malloc (sizeof (sem_t));
     r->buf     = malloc (sizeof (char) * length);
 
-    r->head     = 0;
-    r->tail     = 0;
     r->capacity = length;
-
-    sem_init (r->popSem, 1, 0);
-    sem_init (r->pushSem, 1, length);
+    ring_reset (r);
 
     return r;
 }

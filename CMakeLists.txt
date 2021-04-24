@@ -6,14 +6,20 @@ find_package(Threads REQUIRED)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-add_library(vendor STATIC "src/vendor/encrypt-module.c")
-target_sources(vendor PRIVATE "src/vendor/encrypt-module.h")
+add_library(fkworks0 INTERFACE)
+target_include_directories(fkworks0 INTERFACE src/fkworks0/)
 
-file(GLOB_RECURSE APP_OBJS CONFIGURE_DEPENDS "src/*.c")
-file(GLOB_RECURSE APP_HEADS CONFIGURE_DEPENDS "src/*.h")
+set(LIB_VENDOR_SOURCES 
+    src/vendor/coroutines.c src/vendor/encrypt-module.c src/vendor/ring.c
+)
+set(LIB_VENDOR_HEADERS
+    src/vendor/commmon.h src/vendor/coroutines.h
+    src/vendor/encrypt-module.h src/vendor/global.h src/vendor/ring.h
+)
 
-add_library(app STATIC ${APP_OBJS})
-target_link_libraries(app PUBLIC Threads::Threads)
+add_library(vendor STATIC ${LIB_VENDOR_SOURCES})
+target_sources(vendor PRIVATE ${LIB_VENDOR_HEADERS})
+target_link_libraries(vendor Threads::Threads fkworks0)
 
-add_executable(encrypt352 src/main.c)
-target_link_libraries(encrypt352 vendor app Threads::Threads)
+add_executable(encrypt352 src/encrypt352.c)
+target_link_libraries(encrypt352 PRIVATE vendor fkworks0)

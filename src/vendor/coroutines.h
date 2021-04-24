@@ -1,4 +1,32 @@
 #ifndef H_COROUTINES
+#define H_COROUTINES
+#include "global.h"
+
+/**
+ * When the function returns the encryption module is allowed to reset.
+ *
+ * CALLED ON MAIN THREAD
+ **/
+void reset_requested ();
+
+/**
+ * The function is called after the encryption module has finished a reset.
+ *
+ * CALLED ON MAIN THREAD
+ **/
+void reset_finished ();
+
+pthread_t *ctor_coordinator (globals *g);
+
+void dtor_coordinator (pthread_t *coord);
+
+void print_input_count ();
+
+void print_output_count ();
+/**
+ * Resets thread
+ **/
+void *random_reset ();
 
 /**
  * Coordinator thread, responsible for managing lifecycle of all worker threads.
@@ -53,4 +81,5 @@ void *co_writer (void *a);
  * will need to block if no characters are available in the output buffer.
  **/
 void *co_wcount (void *a);
-#endif
+#endif // H_COROUTINES
+
