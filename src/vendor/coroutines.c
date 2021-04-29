@@ -2,22 +2,20 @@
 
 #include "coroutines.h"
 #include "encrypt-module.c"
-#include "encrypt-module.h"
-#include "global.h"
 #include "ring.h"
 
+#include <bits/struct_rwlock.h>
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-// #define DEBUG_COROUTINES
+//#define DEBUG_COROUTINES
+#define THREAD_COUNT 5
 
-ring *r_rcipher = 0;
-ring *r_rcount  = 0;
-ring *r_wcount  = 0;
-ring *r_write   = 0;
+pthread_t t [THREAD_COUNT];
+ring *r_rcipher = 0, *r_rcount = 0, *r_wcount = 0, *r_write = 0;
 
 sem_t sem_reset_lock;
 
@@ -44,31 +42,15 @@ void print_output_count ()
     print_counts (output_counts);
 }
 
-void reset_requested ()
-{
-    printf ("Reset requested.\n");
-    print_input_count ();
-    print_output_count ();
-    // TODO: Stop threads
-    // TODO: Clear file buffers
-    // TODO: Clear buffers
-    // TODO: Resume threads
-}
-
-void reset_finished ()
-{
-    printf ("Reset finished.\n");
-}
-
-void *random_reset ()
+void *co_random_reset ()
 {
 #ifdef DEBUG_COROUTINES
-    debug ("random_reset() :: Invoked\n");
+    debug ("co_random_reset() :: Invoked");
 #endif
     while (1)
     {
 #ifdef DEBUG_COROUTINES
-        sleep (rand () % 11 + 1);
+        sleep (rand () % 4 + 1);
 #else
         sleep (rand () % 11 + 5);
 #endif
@@ -78,11 +60,11 @@ void *random_reset ()
         reset_finished ();
     }
 #ifdef DEBUG_COROUTINES
-    debug ("random_reset() :: End-of-thread\n");
+    debug ("co_random_reset() :: End-of-thread");
 #endif
 }
 
-void co_coordinator_init (globals *g, pthread_t t [])
+void co_coordinator_init (globals *g)
 {
     ring **rings []              = {&r_rcipher, &r_rcount, &r_wcount, &r_write};
     void *(*routines [])(void *) = {&co_reader, &co_rcipher, &co_rcount,
@@ -97,12 +79,6 @@ void co_coordinator_init (globals *g, pthread_t t [])
     for (i = 0; i < 4; i++)
     {
         char bRead = i < 2;
-
-        if (*rings [i])
-        {
-            dtor_ring (*rings [i]);
-        }
-
         *rings [i] = ctor_ring (bRead ? g->in : g->out);
     }
 
@@ -114,34 +90,31 @@ void co_coordinator_init (globals *g, pthread_t t [])
 
 pthread_t *ctor_coordinator (globals *g)
 {
-    init (g->readFrom, g->writeTo);
     pthread_t *coord = malloc (sizeof (pthread_t));
     pthread_create (coord, NULL, &co_coordinator, (void *)g);
 
     return coord;
 }
 
-void co_coordinator_reset (pthread_t t [])
+void dtor_coordinator (pthread_t *coordinator)
 {
-    debug ("dtor_coordinator_reset() - Awaiting for worker threads to stop...");
-    pthread_t *tr;
+    //    debug ("dtor_coordinator() - awaiting termination...");
 
-    // Send our cancel request.
-    for (tr = t; tr; tr++)
-        pthread_cancel (*tr);
+    pthread_join (*coordinator, NULL);
 
-    // Wait until the thread exits.
-    for (tr = t; tr; tr++)
-        pthread_join (*tr, NULL);
-
-    debug ("dtor_coordinator_reset() - Threads are dead; let's move on.");
+    //    debug ("dtor_coordinator() - calling dtor_ring() on all rings.");
 
     // Cleanup heap
-    ring *rg, *rings [] = {r_rcipher, r_rcount, r_wcount, r_write};
-    for (rg = *rings; rg; rg++)
-        dtor_ring (rg);
+    ring *rings [] = {r_rcipher, r_rcount, r_wcount, r_write};
+    unsigned i;
+    for (i = 0; i < 4; i++)
+        dtor_ring (rings [i]);
 
-    debug ("dtor_coordinator_reset() - dtor_ring() called on all rings.");
+    //    debug ("dtor_coordinator() - destroying thread");
+
+    free (coordinator);
+
+    //    debug ("dtor_coordinator() - done!");
 }
 
 #define THREAD_WRITE_COUNT 3
@@ -149,12 +122,11 @@ void co_coordinator_reset (pthread_t t [])
 void *co_coordinator (void *a)
 {
 #ifdef DEBUG_COROUTINES
-    debug ("co_coordinator(void *a) :: Invoked\n");
+    debug ("co_coordinator(void *a) :: Invoked");
 #endif
 
     globals *g = a;
-    pthread_t t [5];
-    co_coordinator_init (g, t);
+    co_coordinator_init (g);
 
     pthread_setcancelstate (PTHREAD_CANCEL_ENABLE, NULL);
 
@@ -162,12 +134,11 @@ void *co_coordinator (void *a)
     pthread_join (t [THREAD_WRITE_COUNT], NULL);
     pthread_join (t [THREAD_WRITE_FILE], NULL);
 
-    // Dump our counts
     print_input_count ();
     print_output_count ();
 
 #ifdef DEBUG_COROUTINES
-    debug ("co_coordinator(void *a) :: End-of-thread\n");
+    debug ("co_coordinator(void *a) :: End-of-thread");
 #endif
 
     pthread_exit (0);
@@ -176,19 +147,24 @@ void *co_coordinator (void *a)
 void *co_reader (void *a)
 {
 #ifdef DEBUG_COROUTINES
-    debug ("co_reader(void *a) :: Invoked\n");
+    debug ("co_reader(void *a) :: Invoked");
 #endif
 
+    globals *g = a;
     char c;
     do
     {
         c = read_input ();
-        ring_push (c, r_rcount);
-        ring_push (c, r_rcipher);
+
+        if (g->flag.reset)
+            c = EOF;
+
+        ring_push (&c, r_rcount);
+        ring_push (&c, r_rcipher);
     } while (EOF != c);
 
 #ifdef DEBUG_COROUTINES
-    debug ("co_reader(void *a) :: End-of-thread\n");
+    debug ("co_reader(void *a) :: End-of-thread");
 #endif
 
     pthread_exit (0);
@@ -197,17 +173,20 @@ void *co_reader (void *a)
 void *co_rcount (void *a)
 {
 #ifdef DEBUG_COROUTINES
-    debug ("co_rcount(void *a) :: Invoked\n");
+    debug ("co_rcount(void *a) :: Invoked");
 #endif
     char c;
     globals *g = a;
     while ((c = ring_pop (r_rcount)) != EOF)
     {
+        if (g->flag.reset)
+            break;
+
         count_input (c);
-    };
+    }
 
 #ifdef DEBUG_COROUTINES
-    debug ("co_rcount(void *a) :: End-of-thread\n");
+    debug ("co_rcount(void *a) :: End-of-thread");
 #endif
     pthread_exit (0);
 }
@@ -215,23 +194,21 @@ void *co_rcount (void *a)
 void *co_rcipher (void *a)
 {
 #ifdef DEBUG_COROUTINES
-    debug ("co_rcipher(void *a) :: Invoked\n");
+    debug ("co_rcipher(void *a) :: Invoked");
 #endif
     char c, e;
     globals *g = a;
-    while ((c = ring_pop (r_rcipher)) != EOF)
+    do
     {
-        e = caesar_encrypt (c);
-        ring_push (e, r_write);
-        ring_push (e, r_wcount);
-    }
+        c = ring_pop (r_rcipher);
+        e = (c == EOF) ? c : caesar_encrypt (c);
 
-    // Kill the writers
-    ring_push (EOF, r_write);
-    ring_push (EOF, r_wcount);
+        ring_push (&e, r_write);
+        ring_push (&e, r_wcount);
+    } while (c != EOF);
 
 #ifdef DEBUG_COROUTINES
-    debug ("co_rcipher(void *a) :: End-of-thread\n");
+    debug ("co_rcipher(void *a) :: End-of-thread");
 #endif
 
     pthread_exit (0);
@@ -240,7 +217,7 @@ void *co_rcipher (void *a)
 void *co_wcount (void *a)
 {
 #ifdef DEBUG_COROUTINES
-    debug ("co_wcount(void *a) :: Invoked\n");
+    debug ("co_wcount(void *a) :: Invoked");
 #endif
 
     char c;
@@ -251,7 +228,7 @@ void *co_wcount (void *a)
     };
 
 #ifdef DEBUG_COROUTINES
-    debug ("co_wcount(void *a) :: End-of-thread\n");
+    debug ("co_wcount(void *a) :: End-of-thread");
 #endif
 
     pthread_exit (0);
@@ -260,19 +237,26 @@ void *co_wcount (void *a)
 void *co_writer (void *a)
 {
 #ifdef DEBUG_COROUTINES
-    debug ("co_writer(void *a) :: Invoked\n");
+    debug ("co_writer(void *a) :: Invoked");
 #endif
 
-    char c;
+    char *c    = malloc (sizeof (char));
     globals *g = a;
-    while ((c = ring_pop (r_write)) != EOF)
+    for (*c = ring_pop (r_write); *c != EOF; *c = ring_pop (r_write))
     {
-        write_output (c);
-    };
+        write_output (*c);
+    }
 
-    printf ("\nEnd of file reached.\n");
+    free (c);
+
+    if (!g->flag.reset)
+    {
+        g->flag.done = 1;
+        printf ("\nEnd of file reached.\n");
+    }
+
 #ifdef DEBUG_COROUTINES
-    debug ("co_writer(void *a) :: End-of-thread\n");
+    debug ("co_writer(void *a) :: End-of-thread");
 #endif
 
     pthread_exit (0);

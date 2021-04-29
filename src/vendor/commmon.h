@@ -1,10 +1,6 @@
-#ifndef H_COMMON
+#pragma one
 
 #include "coroutines.h"
 #include "encrypt-module.h"
 #include "global.h"
 #include "ring.h"
-
-pthread_t *coordinator;
-
-#endif // H_COMMON

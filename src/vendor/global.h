@@ -1,6 +1,6 @@
-#ifndef H_GLOBAL
-#define H_GLOBAL
+#pragma once
 #include <pthread.h>
+#include <stdio.h>
 
 typedef struct
 {
@@ -8,6 +8,22 @@ typedef struct
     char *writeTo;
     unsigned in;
     unsigned out;
+    pthread_t *coordinator;
+    struct
+    {
+        char reset : 1;
+        char done : 1;
+    } flag;
 } globals;
 
-#endif // H_GLOBAL
+/**
+ * Constructs a new global object
+ *
+ **/
+globals *ctor_global ();
+
+/**
+ * Destroys global object
+ *
+ **/
+void dtor_global (globals *g);

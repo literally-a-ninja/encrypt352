@@ -1,12 +1,14 @@
 #include <pthread.h>
 #include <semaphore.h>
-#include <stdbool.h> // bool type
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h> // stat
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "fkworks0/debug.h"
-#include "vendor/commmon.h"
+#include "vendor/coroutines.c"
+#include "vendor/encrypt-module.h"
 
 globals *g;
 
@@ -103,12 +105,39 @@ int pre_buffers (unsigned *in, unsigned *out)
     return 0;
 }
 
+void teardown (globals *g)
+{
+    fclose (input_file);
+    fclose (output_file);
+    dtor_global (g);
+}
+
+void reset_requested ()
+{
+    if (g->flag.done)
+        pthread_exit (0);
+
+    printf ("Reset requested.\n");
+
+    // Child threads self-terminate after setting this.
+    g->flag.reset = 1;
+
+    while (g->flag.reset)
+        ;
+}
+
+void reset_finished ()
+{
+    g->flag.reset = 0;
+    printf ("Reset finished.\n");
+}
+
 int main (int argc, char *argv [])
 {
 #ifdef DEBUG_COROUTINES
     debug ("main :: Invoked");
 #endif
-    g = malloc (sizeof (globals));
+    g = ctor_global ();
 
     if (pre_malformed_input (argc, argv))
         return 0;
@@ -119,8 +148,24 @@ int main (int argc, char *argv [])
     g->readFrom = find_argument (1, argc, argv);
     g->writeTo  = find_argument (2, argc, argv);
 
-    coordinator = ctor_coordinator (g);
-    pthread_join (*coordinator, NULL);
+    printf ("\n");
+
+    init (g->readFrom, g->writeTo);
+
+    while (!g->flag.done)
+    {
+#ifdef DEBUG_COROUTINES
+        debug ("main :: Spawned new coordinator thread.");
+#endif
+        g->coordinator = ctor_coordinator (g);
+
+        pthread_join (*g->coordinator, NULL);
+        dtor_coordinator (g->coordinator);
+
+        g->flag.reset = 0;
+    }
+
+    teardown (g);
 
 #ifdef DEBUG_COROUTINES
     debug ("main :: End-of-thread");

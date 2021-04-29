@@ -1,7 +1,6 @@
-#ifndef H_ENCRYPT
-#define H_ENCRYPT
-
+#pragma once
 #include <stdio.h>
+
 /**
  * You must use these functions to perform all I/O, encryption and counting
  * operations.
@@ -17,5 +16,3 @@ int get_output_count (int c);
 int get_input_total_count ();
 int get_output_total_count ();
 void clear_counts ();
-
-#endif // H_ENCRYPT

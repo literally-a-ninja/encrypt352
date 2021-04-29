@@ -2,6 +2,7 @@
 
 #include "ansicolors.h"
 #include <error.h>
+#include <stdio.h>
 
 /**
  * Debug helpers from anacrolix/archive on GitHub.
@@ -24,9 +25,9 @@
 
 #define debug(fmt, ...)                                                        \
     fprintf (stderr, ANSI_COLOR_BLUE "D: " ANSI_COLOR_RESET);                  \
-    fprintf (stderr, fmt, ##__VA_ARGS__)
+    fprintf (stderr, fmt "\n", ##__VA_ARGS__)
 
-#define dump(varname) debug ("%s = %d (0x%02X)\n", #varname, varname, varname);
+#define dump(varname) debug ("%s = %d (0x%02X)", #varname, varname, varname);
 
 #define psize(type)                                                            \
     (error_at_line (0, 0, __FILE__, __LINE__, "sizeof(" #type ") : %lu",       \

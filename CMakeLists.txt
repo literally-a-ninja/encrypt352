@@ -10,7 +10,7 @@ add_library(fkworks0 INTERFACE)
 target_include_directories(fkworks0 INTERFACE src/fkworks0/)
 
 set(LIB_VENDOR_SOURCES 
-    src/vendor/coroutines.c src/vendor/encrypt-module.c src/vendor/ring.c
+    src/vendor/coroutines.c src/vendor/encrypt-module.c src/vendor/ring.c src/vendor/global.c
 )
 set(LIB_VENDOR_HEADERS
     src/vendor/commmon.h src/vendor/coroutines.h

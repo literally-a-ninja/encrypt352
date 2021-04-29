@@ -11,7 +11,7 @@
 #include <time.h>
 #include <unistd.h>
 
-// #define RESETS
+#define RESETS
 
 FILE *input_file;
 FILE *output_file;
@@ -34,7 +34,7 @@ void init (char *inputFileName, char *outputFileName)
 #ifdef RESETS
     pthread_t pid;
     srand (time (0));
-    pthread_create (&pid, NULL, &random_reset, NULL);
+    pthread_create (&pid, NULL, &co_random_reset, NULL);
 #endif
 
     input_file  = fopen (inputFileName, "r");

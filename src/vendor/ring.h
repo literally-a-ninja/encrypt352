@@ -10,9 +10,9 @@ typedef struct
     sem_t *pushSem, *popSem;
 } ring;
 
-void ring_push (char c, ring *r);
+void ring_push (char *c, ring *r);
 char ring_pop (ring *r);
-void ring_reset (ring *r);
+void ring_pop_to (ring *r, char *c);
 void dtor_ring (ring *r);
 ring *ctor_ring (unsigned length);
 
