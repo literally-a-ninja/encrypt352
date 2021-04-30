@@ -42,28 +42,6 @@ void print_output_count ()
     print_counts (output_counts);
 }
 
-void *co_random_reset ()
-{
-#ifdef DEBUG_COROUTINES
-    debug ("co_random_reset() :: Invoked");
-#endif
-    while (1)
-    {
-#ifdef DEBUG_COROUTINES
-        sleep (rand () % 4 + 1);
-#else
-        sleep (rand () % 11 + 5);
-#endif
-        reset_requested ();
-        key = rand () % 26;
-        clear_counts ();
-        reset_finished ();
-    }
-#ifdef DEBUG_COROUTINES
-    debug ("co_random_reset() :: End-of-thread");
-#endif
-}
-
 void co_coordinator_init (globals *g)
 {
     ring **rings []              = {&r_rcipher, &r_rcount, &r_wcount, &r_write};
